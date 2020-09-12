@@ -1,0 +1,2 @@
+INSERT INTO `bags` (`Id`, `Name`, `Price`, `qty`) VALUES ('5', 'qw', '5', '100');
+insert into bags (`Id`, `Name`, `Price`, `qty`) VALUES ('10', 'd', '34', '10' )"
