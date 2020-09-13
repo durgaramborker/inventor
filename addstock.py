@@ -4,6 +4,8 @@ import MySQLdb
 import tkinter
 import pymysql
 import mysql.connector
+import QuantityPriceFetcher
+from QuantityPriceFetcher import Fetch
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -32,14 +34,7 @@ class insertStock:
                    
                     priceLabel.grid(row=3,column=0)
                 def getcurrentQty():
-                    sqlConnector=connector()                                #get the connector to the db
-                    connection=sqlConnector.getConnector() 
-                    cursor = connection.cursor()
-                    cursor.execute("USE archa")
-                    querry="select qty from "+str(categoty.get())+" where Name = '"+str(nameBox.get())+"'"
-                    cursor.execute(querry)
-                    qtytTable = cursor.fetchall()
-                    quantity=qtytTable[0]
+                    quantity=Fetch.getQuantity(str(categoty.get()),str(nameBox.get()))   
                     return quantity[0]   
 
 

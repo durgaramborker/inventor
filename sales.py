@@ -4,6 +4,8 @@ import MySQLdb
 import tkinter
 import pymysql
 import mysql.connector
+import QuantityPriceFetcher
+from QuantityPriceFetcher import Fetch
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -36,12 +38,9 @@ class Sale:
                         def addSale():
                                                                 #this function is the main function that adds sale to the totalsale, updates price, updates qty
                                 if(isAvailable()):
-                                        cursor.execute("USE archa")                                       
-                                        querry="select Price from "+str(table.get())+" where Name = '"+str(subTable.get()+"'")
-                                        cursor.execute(querry)
-                                        priceTable = cursor.fetchall()
-                                        price=int(priceTable[0][0])
-                                        individualprice=int(priceTable[0][0])
+                                        
+                                        price=Fetch.getPrice(str(table.get()), str(subTable.get()))
+                                        individualprice=int(price)
                                         prevprice=int(w.cget("text"))
                                         items=int(totalItems .cget("text"))
                                         items+=1
@@ -96,10 +95,7 @@ class Sale:
                                 table=ea[0].get()
                                 subtable=ea[1].get()
                                 quantityValue=ea[2].get()      
-                                cursor.execute("USE archa")                                       
-                                querry="select Price from "+str(table)+" where Name = '"+str(subtable)+"'"
-                                cursor.execute(querry)
-                                priceTable = cursor.fetchall()
+                                price=Fetch.getPrice(str(table), str(subtable))
                                 cursor.execute("USE archa")
                                 querry="select qty from "+str(table)+" where Name = '"+str(subtable)+"'"
                                 cursor.execute(querry)
@@ -108,8 +104,8 @@ class Sale:
                                 cursor.execute("USE archa")
                                 querry="update "+str(table)+" set qty= '"+str(quantity[0]+int(quantityValue))+"' where Name = '"+str(subtable)+"'"
                                 cursor.execute(querry)
-                                price=int(priceTable[0][0]*int(quantityValue))
-                                w.config(text=str(int(w.cget("text"))-price)) #update the price in the totalsale as subtract whatever is removed
+                                priceFinal=int(price*int(quantityValue))
+                                w.config(text=str(int(w.cget("text"))-priceFinal)) #update the price in the totalsale as subtract whatever is removed
                                 qtyArray=[]
                                 for i in range(int(quantity[0]+int(quantityValue))):    #update the qty availalbein the quantity box again as available qty+whatever was removed
                                         qtyArray.append(i+1)
