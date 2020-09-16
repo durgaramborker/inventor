@@ -4,6 +4,8 @@ import MySQLdb
 import tkinter
 import pymysql
 import mysql.connector
+import CommonUtils
+from CommonUtils import Fetch
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -23,15 +25,8 @@ class Stock:
                         querry= "SELECT * FROM "
                         querry=querry+ str(tablename)      
                         cursor.execute(querry)
-                        field_names = {}
+                        field_names =Fetch.getFields( str(tablename))
                         column=0
-                        num_fields = len(cursor.description)
-                        for d in cursor.description:
-                                field_names[column] = d[0]
-                                column+=1
-                                continue
-                                
-                       
                         stock = Tk()
                         stock.title("Stock for "+tablename)
                         for j in range(len(field_names)):
