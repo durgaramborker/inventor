@@ -4,13 +4,13 @@ import MySQLdb
 import tkinter
 import pymysql
 import mysql.connector
-import QuantityPriceFetcher
-from QuantityPriceFetcher import Fetch
+import CommonUtils
+from CommonUtils import Fetch
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
-from datetime import datetime
+
 
 class insertStock:
 
@@ -39,19 +39,7 @@ class insertStock:
 
 
                 def addStock():
-                    sqlConnector=connector()                                #get the connector to the db
-                    connection=sqlConnector.getConnector() 
-                    cursor = connection.cursor()
-                    querry= "SELECT * FROM "
-                    querry=querry+ str(categoty.get())      
-                    cursor.execute(querry)
-                    field_names = {}
-                    column=0
-                    num_fields = len(cursor.description)
-                    for d in cursor.description:
-                        field_names[column] = d[0]
-                        column+=1
-                        continue
+                    field_names = Fetch.getFields(str(categoty.get()))
                     if((str(nameBox.get())=='')):
                         sqlConnector=connector()                                #get the connector to the db
                         connection=sqlConnector.getConnector() 
@@ -76,22 +64,14 @@ class insertStock:
                         querry="UPDATE "+str(categoty.get())+" SET  `qty` ="+str(quantity)+" WHERE `"+str(categoty.get())+"`.`Name`= '"+str(nameBox.get())+"'"
                         cursor.execute(querry)
                         connection.commit()
-                    querry= "SELECT * FROM newstock "
-                    querry=querry+ str(categoty.get())      
-                    cursor.execute(querry)
-                    field_names = {}
-                    column=0
-                    num_fields = len(cursor.description)
-                    for d in cursor.description:
-                        field_names[column] = d[0]
-                        column+=1
-                        continue
+                    
+                    field_names =Fetch.getFields('newstock')
                     sqlConnector=connector()                                #get the connector to the db
                     connection=sqlConnector.getConnector() 
                     cursor = connection.cursor()
                     now = datetime.now()
                     name=''
-                    formatted_date = now.strftime('%Y-%m-%d')
+                    formatted_date = Fetch.getFormattedDate()
                     if(str(nameLabel.get("1.0",'end-1c'))==''):
                         name=str(nameBox.get())
                     else:
@@ -143,16 +123,7 @@ class insertStock:
                         tables2.append(tables[i][0])              
                 categoty['values'] = tables2  
                 categoty.bind("<<ComboboxSelected>>",loadNames)
-                querry= "SELECT * FROM newstock " 
-                cursor.execute(querry)
-                field_names = {}
-                column=0
-                labelList=[]
-                num_fields = len(cursor.description)
-                for d in cursor.description:
-                    field_names[column] = d[0]
-                    column+=1
-                    continue
+                field_names = Fetch.getFields('newstock')
                 for j in range(len(field_names)-1):
                    label=tkinter.Label(newStock, width=10,text=field_names[j])
                    label.grid(row=j,column=0)

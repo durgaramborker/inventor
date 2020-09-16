@@ -2,4 +2,5 @@ INSERT INTO `bags` (`Id`, `Name`, `Price`, `qty`) VALUES ('5', 'qw', '5', '100')
 insert into bags (`Id`, `Name`, `Price`, `qty`) VALUES ('10', 'd', '34', '10' )"
 UPDATE `bags` SET `qty` = '10' WHERE `bags`.`Name` = 'chfff';
 insert into newstock(`category`,`Name`,`qty`,`date`) VALUES ('bags', 'chfff', '10','2020-09-12'
+INSERT INTO `saleout` (`category`, `Name`, `qty`, `totalprice`, `date`) VALUES ('bags', 'chfff', '12', '300', '2020-09-16');
 

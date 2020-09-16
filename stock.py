@@ -56,10 +56,6 @@ class Stock:
                 
                 def callbackFunc(event):
                     clicked(numberChosen.get())                                              
-                
-                
-                
-                
                 sqlConnector=connector()                                #get the connector to the db
                 connection=sqlConnector.getConnector() 
                 cursor = connection.cursor()

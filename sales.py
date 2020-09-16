@@ -4,8 +4,8 @@ import MySQLdb
 import tkinter
 import pymysql
 import mysql.connector
-import QuantityPriceFetcher
-from QuantityPriceFetcher import Fetch
+import CommonUtils
+from CommonUtils import Fetch
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -34,7 +34,24 @@ class Sale:
                                 connection.commit()
                                 saleFrame.destroy()
                                
-                               
+                        def saleOut(price):
+                                field_names = Fetch.getFields('saleout')
+                                formatted_date = Fetch.getFormattedDate()
+                                cursor.execute("USE archa")
+                                querry= "insert into saleout ("
+                                for j in range(len(field_names)):
+                                        if(j!=len(field_names)-1):
+                                                querry=querry+"`"+field_names[j]+"`,"
+                                        else:
+                                                querry=querry+"`"+field_names[j]+"`"
+                                querry=querry+") VALUES ("
+                                querry=querry+"'"+str(table.get())+"', '"+str(subTable.get())+"', '"+str(qtyTable.get())+"','"+str(int(price)*int(qtyTable.get()))+"','"+formatted_date+"' )"
+                                #querry="update  saleout"+str(table.get())+" set qty= '"+str(quantity[0]-int(qtyTable.get()))+"' where Name = '"+str(subTable.get()+"'")
+                                cursor.execute(querry)    
+                        def updateSaleOut(table,subtable,quantity,price):
+                                cursor.execute("USE archa")
+                                querry="update  saleout"+str(table.get())+" set qty= '"+str(quantity[0]-int(qtyTable.get()))+"' where Name = '"+str(subTable.get()+"'")
+                                cursor.execute(querry)    
                         def addSale():
                                                                 #this function is the main function that adds sale to the totalsale, updates price, updates qty
                                 if(isAvailable()):
@@ -76,7 +93,10 @@ class Sale:
                                         for i in range(int(quantity[0]-int(qtyTable.get()))):
                                                 qtyArray.append(i+1)
                                                 i+=1
-                                        qtyTable['values']=qtyArray                     # populates the qty box with available qty                                      
+                                        qtyTable['values']=qtyArray                 # populates the qty box with available qty
+                                        saleOut(Fetch.getPrice(str(table.get()), str(subTable.get())))
+                                                
+                                                                 
                                         return True
                         def updateQuantity(event):
                                 qtyArray=[]
@@ -111,11 +131,12 @@ class Sale:
                                         qtyArray.append(i+1)
                                         i+=1
                                         qtyTable['values']=qtyArray
+                                #updateSaleOut(table,subtable,quantity,price)
                                 for i in range(len(ea)):        
                                         ea[i].destroy()
                                         buton.destroy()
                         
-                                       
+                                    
                         sqlConnector=connector()                                #get the connector to the db
                         connection=sqlConnector.getConnector() 
                         cursor = connection.cursor()
