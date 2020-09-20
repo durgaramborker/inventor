@@ -92,8 +92,11 @@ class Sale:
                                 else:
                                        
                                         cursor.execute("USE archa")
-                                        querry="update "+str(table.get())+" set qty= '"+str(quantity[0]-int(qtyTable.get()))+"' where Name = '"+str(subTable.get()+"'")
-                                        cursor.execute(querry)
+                                        attDict=dict()
+                                        conditionDict=dict()
+                                        attDict={'qty':str(quantity[0]-int(qtyTable.get()))}
+                                        conditionDict={'Name':str(subTable.get())}
+                                        DbUtils.updateDB(str(table.get()),attDict,conditionDict,cursor)
                                         for i in range(int(quantity[0]-int(qtyTable.get()))):
                                                 qtyArray.append(i+1)
                                                 i+=1

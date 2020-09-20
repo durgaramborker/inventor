@@ -41,12 +41,12 @@ class insertStock:
 
 
                 def addStock():
-                    
+                    sqlConnector=connector()                                #get the connector to the db
+                    connection=sqlConnector.getConnector() 
+                    cursor = connection.cursor()
                     
                     if((str(nameBox.get())=='')):
-                        sqlConnector=connector()                                #get the connector to the db
-                        connection=sqlConnector.getConnector() 
-                        cursor = connection.cursor()
+                        
                         attrList={}
                         attrList[0]=str(nameLabel.get("1.0",'end-1c'))
                         attrList[1]=str(priceText.get("1.0",'end-1c'))

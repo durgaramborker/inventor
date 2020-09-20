@@ -31,5 +31,23 @@ class DbUtils:
                             querry=querry+"'"+str(attList[i])+"',"
                         else:
                             querry=querry+"'"+str(attList[i])+"' )"
-                    cursor.execute(querry)    
+                    cursor.execute(querry)   
+                def updateDB(tableName,attList,conditionList,cursor):
+                    querry="update "+str(tableName)+" set "
+                    attKeysList=list(attList)
+                    conditionKeysList=list(conditionList)
+                    for i in range(len(attList)):
+                        if(i!=len(attList)-1):
+                            querry=querry+"`"+str(attKeysList[i])+"` = '"+attList[str(attKeysList[i])]+"', "
+                        else:
+                            querry=querry+"`"+str(attKeysList[i])+"` = '"+attList[str(attKeysList[i])]+"' Where "
+                    for j in range(len(conditionList)):
+                        if(j!=len(conditionList)-1):
+                            querry=querry+"`"+str(tableName)+"`.`"+str(conditionKeysList[i])+"` = '"+conditionList[str(conditionKeysList[i])]+"' AND "
+                        else:
+                              querry=querry+"`"+str(tableName)+"`.`"+str(conditionKeysList[i])+"` = '"+conditionList[str(conditionKeysList[i])]+"'"
+                    
+                    cursor.execute(querry)  
+
+
                     
