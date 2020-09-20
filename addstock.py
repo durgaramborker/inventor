@@ -36,7 +36,7 @@ class insertStock:
                    
                     priceLabel.grid(row=3,column=0)
                 def getcurrentQty():
-                    quantity=Fetch.getQuantity(str(categoty.get()),str(nameBox.get()))   
+                    quantity=Fetch.getQuantity(str(categoty.get()),str(nameBox.get()),cursor)   
                     return quantity[0]   
 
 

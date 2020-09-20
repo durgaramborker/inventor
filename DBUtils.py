@@ -12,14 +12,14 @@ from tkinter import messagebox
 from dbconnection import connector
 
 
-class DbUtils:
+class DbUtils:                                                                                          #this class contains common DB methods, that can be used dynamically
 
                 def __init__():
                     pass
 
-                def insertIntoDB(tableName,attList,cursor):
-                    field_names = Fetch.getFields(tableName)
-                    querry= "insert into "+str(tableName)+ "("
+                def insertIntoDB(tableName,attList,cursor):                     #This function inserts into DB dynamically. takes table attributes names from @param tableName
+                    field_names = Fetch.getFields(tableName)                    #Takes cell values from attList.attList mst contain values in the same order as column names in the DB
+                    querry= "insert into "+str(tableName)+ "("                  #else, there will be inconsistencies and sometimes querry execution may fail due to type constraints 
                     for j in range(len(field_names)):
                         if(j!=len(field_names)-1):
                             querry=querry+"`"+field_names[j]+"`,"
@@ -32,10 +32,10 @@ class DbUtils:
                         else:
                             querry=querry+"'"+str(attList[i])+"' )"
                     cursor.execute(querry)   
-                def updateDB(tableName,attList,conditionList,cursor):
-                    querry="update "+str(tableName)+" set "
-                    attKeysList=list(attList)
-                    conditionKeysList=list(conditionList)
+                def updateDB(tableName,attList,conditionList,cursor):           #This function updates into db dynamocally. takes attributes to be updated
+                    querry="update "+str(tableName)+" set "                     #as maps or dictionaries of structure(attributename:new value) in attList. @sample:attlist={Name:'abc'}
+                    attKeysList=list(attList)                                   #takes conditions for update statements in conditionlist map or dictionary of structure(condition attribute:attribute value)
+                    conditionKeysList=list(conditionList)                       #@sample: suppose condition is, "update tablename set colname="newValue where comumn2=value2.."this will have structure (comumn2:value2)  
                     for i in range(len(attList)):
                         if(i!=len(attList)-1):
                             querry=querry+"`"+str(attKeysList[i])+"` = '"+attList[str(attKeysList[i])]+"', "

@@ -60,7 +60,7 @@ class Sale:
                                                                 #this function is the main function that adds sale to the totalsale, updates price, updates qty
                                 if(isAvailable()):
                                         
-                                        price=Fetch.getPrice(str(table.get()), str(subTable.get()))
+                                        price=Fetch.getPrice(str(table.get()), str(subTable.get()),cursor)
                                         individualprice=int(price)
                                         prevprice=int(w.cget("text"))
                                         items=int(totalItems .cget("text"))
@@ -81,12 +81,9 @@ class Sale:
                                 else:
                                         messagebox.showerror("out of stock","Sorry, the item"+str(subTable.get())+"is out of stock")
                         def isAvailable():
-                                qtyArray=[]                             #this function checks if selected item is available and populates the qty box with available qty
+                                qtyArray=[]                                                #this function checks if selected item is available and populates the qty box with available qty
                                 cursor.execute("USE archa")
-                                querry="select qty from "+str(table.get())+" where Name = '"+str(subTable.get()+"'")    
-                                cursor.execute(querry)
-                                qtytTable = cursor.fetchall()
-                                quantity=qtytTable[0]        
+                                quantity=Fetch.getQuantity(str(table.get()),str(subTable.get()),cursor)        
                                 if(quantity[0]==0):
                                         return False
                                 else:
@@ -101,17 +98,14 @@ class Sale:
                                                 qtyArray.append(i+1)
                                                 i+=1
                                         qtyTable['values']=qtyArray                 # populates the qty box with available qty
-                                        saleOut(Fetch.getPrice(str(table.get()), str(subTable.get())))
+                                        saleOut(Fetch.getPrice(str(table.get()),str(subTable.get()),cursor))
                                                 
                                                                  
                                         return True
                         def updateQuantity(event):
                                 qtyArray=[]
                                 cursor.execute("USE archa")
-                                querry="select qty from "+str(table.get())+" where Name = '"+str(subTable.get()+"'")
-                                cursor.execute(querry)
-                                qtytTable = cursor.fetchall()
-                                quantity=qtytTable[0] 
+                                quantity=Fetch.getQuantity(str(table.get()),str(subTable.get()),cursor)     
                                 j=0                                       
                                 for i in range(int(quantity[0])):
                                         qtyArray.append(i+1)
@@ -122,18 +116,18 @@ class Sale:
                                 table=ea[0].get()
                                 subtable=ea[1].get()
                                 quantityValue=ea[2].get()      
-                                price=Fetch.getPrice(str(table), str(subtable))
+                                price=Fetch.getPrice(str(table), str(subtable),cursor)
                                 categoryList.append(table)
                                 nameList.append(subtable)
                                 cursor.execute("USE archa")
-                                querry="select qty from "+str(table)+" where Name = '"+str(subtable)+"'"
-                                cursor.execute(querry)
-                                qtytTable = cursor.fetchall()
-                                quantity=qtytTable[0]   
+                                quantity=Fetch.getQuantity(str(table),str(subtable),cursor)    
                                 qtyList.append(quantityValue)
                                 cursor.execute("USE archa")
-                                querry="update "+str(table)+" set qty= '"+str(quantity[0]+int(quantityValue))+"' where Name = '"+str(subtable)+"'"
-                                cursor.execute(querry)
+                                attDict=dict()
+                                conditionDict=dict()
+                                attDict={'qty':str(quantity[0]+int(quantityValue))}
+                                conditionDict={'Name':str(subtable)}
+                                DbUtils.updateDB(str(table),attDict,conditionDict,cursor)
                                 priceFinal=int(price*int(quantityValue))
                                 w.config(text=str(int(w.cget("text"))-priceFinal)) #update the price in the totalsale as subtract whatever is removed
                                 qtyArray=[]

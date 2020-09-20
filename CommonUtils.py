@@ -18,20 +18,14 @@ class Fetch:
                 pass
 
 
-            def getPrice(tableName,subTableName):
-                sqlConnector=connector()                                #get the connector to the db
-                connection=sqlConnector.getConnector() 
-                cursor = connection.cursor()
+            def getPrice(tableName,subTableName,cursor):
                 cursor.execute("USE archa")                                       
                 querry="select Price from "+str(tableName)+" where Name = '"+str(subTableName)+"'"
                 cursor.execute(querry)
                 priceTable = cursor.fetchall()
                 price=int(priceTable[0][0])
                 return price
-            def getQuantity(tableName,subTableName):
-                sqlConnector=connector()                                #get the connector to the db
-                connection=sqlConnector.getConnector() 
-                cursor = connection.cursor()
+            def getQuantity(tableName,subTableName,cursor): 
                 qtyArray=[]                           
                 cursor.execute("USE archa")
                 querry="select qty from "+str(tableName)+" where Name = '"+str(subTableName)+"'"    
