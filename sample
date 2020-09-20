@@ -3,4 +3,5 @@ insert into bags (`Id`, `Name`, `Price`, `qty`) VALUES ('10', 'd', '34', '10' )"
 UPDATE `bags` SET `qty` = '10' WHERE `bags`.`Name` = 'chfff';
 insert into newstock(`category`,`Name`,`qty`,`date`) VALUES ('bags', 'chfff', '10','2020-09-12'
 INSERT INTO `saleout` (`category`, `Name`, `qty`, `totalprice`, `date`) VALUES ('bags', 'chfff', '12', '300', '2020-09-16');
+DELETE FROM `saleout` WHERE category='bags' and Name='chfff' AND qty='10' AND date='2020-09-13' LIMIT 1
 

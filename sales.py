@@ -5,6 +5,8 @@ import tkinter
 import pymysql
 import mysql.connector
 import CommonUtils
+import DBUtils
+from DBUtils import DbUtils
 from CommonUtils import Fetch
 from tkinter import *
 from tkinter import ttk
@@ -18,7 +20,9 @@ class Sale:
                pass
 
             def Sales(self):
-                                         #this function is called to display the sales page
+                        categoryList=[]
+                        nameList=[]
+                        qtyList=[]                         #this function is called to display the sales page
                 
                         def selectcat(event):                                                   
                                 cursor.execute("USE archa")                             #this function is called to display products under a category
@@ -32,26 +36,26 @@ class Sale:
                         def finalizeSale():                     # this function finalizes sale and reflects the updated aty back into the db
                                 qtyTable.set(1)
                                 connection.commit()
+                                updateSaleOut(categoryList,nameList,qtyList)
                                 saleFrame.destroy()
                                
                         def saleOut(price):
-                                field_names = Fetch.getFields('saleout')
+                                attrList={}
                                 formatted_date = Fetch.getFormattedDate()
+                                attrList[0]=str(table.get())
+                                attrList[1]=str(subTable.get())
+                                attrList[2]=str(qtyTable.get())
+                                attrList[3]=str(int(price)*int(qtyTable.get()))
+                                attrList[4]=formatted_date
+                                DbUtils.insertIntoDB("saleout",attrList,cursor)
+                          
+                        def updateSaleOut(table,subtable,quantity):
                                 cursor.execute("USE archa")
-                                querry= "insert into saleout ("
-                                for j in range(len(field_names)):
-                                        if(j!=len(field_names)-1):
-                                                querry=querry+"`"+field_names[j]+"`,"
-                                        else:
-                                                querry=querry+"`"+field_names[j]+"`"
-                                querry=querry+") VALUES ("
-                                querry=querry+"'"+str(table.get())+"', '"+str(subTable.get())+"', '"+str(qtyTable.get())+"','"+str(int(price)*int(qtyTable.get()))+"','"+formatted_date+"' )"
-                                #querry="update  saleout"+str(table.get())+" set qty= '"+str(quantity[0]-int(qtyTable.get()))+"' where Name = '"+str(subTable.get()+"'")
-                                cursor.execute(querry)    
-                        def updateSaleOut(table,subtable,quantity,price):
-                                cursor.execute("USE archa")
-                                querry="update  saleout"+str(table.get())+" set qty= '"+str(quantity[0]-int(qtyTable.get()))+"' where Name = '"+str(subTable.get()+"'")
-                                cursor.execute(querry)    
+                                formatted_date = Fetch.getFormattedDate()
+                                for i in range (len(table)):
+                                        querry="delete from saleout where category='"+str(table[i])+"' AND Name='"+str(subtable[i])+"' AND qty='"+str(quantity[i])+"' AND date='"+formatted_date+"' LIMIT 1"
+                                        cursor.execute(querry)
+                                connection.commit()    
                         def addSale():
                                                                 #this function is the main function that adds sale to the totalsale, updates price, updates qty
                                 if(isAvailable()):
@@ -116,11 +120,14 @@ class Sale:
                                 subtable=ea[1].get()
                                 quantityValue=ea[2].get()      
                                 price=Fetch.getPrice(str(table), str(subtable))
+                                categoryList.append(table)
+                                nameList.append(subtable)
                                 cursor.execute("USE archa")
                                 querry="select qty from "+str(table)+" where Name = '"+str(subtable)+"'"
                                 cursor.execute(querry)
                                 qtytTable = cursor.fetchall()
                                 quantity=qtytTable[0]   
+                                qtyList.append(quantityValue)
                                 cursor.execute("USE archa")
                                 querry="update "+str(table)+" set qty= '"+str(quantity[0]+int(quantityValue))+"' where Name = '"+str(subtable)+"'"
                                 cursor.execute(querry)

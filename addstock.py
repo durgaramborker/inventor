@@ -5,6 +5,8 @@ import tkinter
 import pymysql
 import mysql.connector
 import CommonUtils
+import DBUtils
+from DBUtils import DbUtils
 from CommonUtils import Fetch
 from tkinter import *
 from tkinter import ttk
@@ -39,61 +41,44 @@ class insertStock:
 
 
                 def addStock():
-                    field_names = Fetch.getFields(str(categoty.get()))
+                    
+                    
                     if((str(nameBox.get())=='')):
                         sqlConnector=connector()                                #get the connector to the db
                         connection=sqlConnector.getConnector() 
                         cursor = connection.cursor()
-                        querry= "insert into "+str(categoty.get())+" ("
-                        for j in range(len(field_names)):
-                            if(j!=len(field_names)-1):
-                                querry=querry+"`"+field_names[j]+"`,"
-                            else:
-                                querry=querry+"`"+field_names[j]+"`"
-                        querry=querry+") VALUES ("
-                        querry=querry+"'"+str(nameLabel.get("1.0",'end-1c'))+"', '"+str(priceText.get("1.0",'end-1c'))+"', '"+str(qtyText.get("1.0",'end-1c'))+"' )"
-                        cursor.execute(querry)
+                        attrList={}
+                        attrList[0]=str(nameLabel.get("1.0",'end-1c'))
+                        attrList[1]=str(priceText.get("1.0",'end-1c'))
+                        attrList[2]=str(qtyText.get("1.0",'end-1c'))
+                        DbUtils.insertIntoDB(str(categoty.get()),attrList,cursor)
                         connection.commit()
                     else:
                         quantity=0
                         quantity=getcurrentQty()
                         quantity+=int(qtyText.get("1.0",'end-1c'))
-                        sqlConnector=connector()                                #get the connector to the db
-                        connection=sqlConnector.getConnector() 
-                        cursor = connection.cursor()
                         querry="UPDATE "+str(categoty.get())+" SET  `qty` ="+str(quantity)+" WHERE `"+str(categoty.get())+"`.`Name`= '"+str(nameBox.get())+"'"
                         cursor.execute(querry)
                         connection.commit()
-                    
-                    field_names =Fetch.getFields('newstock')
                     sqlConnector=connector()                                #get the connector to the db
                     connection=sqlConnector.getConnector() 
                     cursor = connection.cursor()
-                    now = datetime.now()
-                    name=''
                     formatted_date = Fetch.getFormattedDate()
                     if(str(nameLabel.get("1.0",'end-1c'))==''):
                         name=str(nameBox.get())
                     else:
                         name=str(nameLabel.get("1.0",'end-1c'))
-                
-                        
-                    querry= "insert into newstock("
-                    for j in range(len(field_names)):
-                        if(j!=len(field_names)-1):
-                            querry=querry+"`"+field_names[j]+"`,"
-                        else:
-                            querry=querry+"`"+field_names[j]+"`"
-                    querry=querry+") VALUES ("
-                    querry=querry+"'"+str(categoty.get())+"', '"+name+"', '"+str(qtyText.get("1.0",'end-1c'))+"','"+formatted_date+"' )"
-                    cursor.execute(querry)
+                    attrList={}
+                    attrList[0]=str(categoty.get())
+                    attrList[1]=name
+                    attrList[2]=str(qtyText.get("1.0",'end-1c'))
+                    attrList[3]=formatted_date
+                    DbUtils.insertIntoDB('newstock',attrList,cursor)
                     connection.commit()
                     messagebox.showinfo("","The item has been successfully added to the stock")
                     newStock.destroy()
                     
-                sqlConnector=connector()                                #get the connector to the db
-                connection=sqlConnector.getConnector() 
-                cursor = connection.cursor()
+                
                 newStock = Tk()                                              #this function is called to display availale product categories
                 newStock.geometry('350x350')    
                 newStock.title("Stock Entry")
@@ -112,6 +97,9 @@ class insertStock:
                 qtyText.grid(row=2,column=1)
                 categoty.grid(column = 1, row =0)
                 nameBox.grid(column = 1, row =1)
+                sqlConnector=connector()                                #get the connector to the db
+                connection=sqlConnector.getConnector() 
+                cursor = connection.cursor()
                 cursor.execute("USE archa")
                 cursor.execute("SHOW TABLES")
                 tables = cursor.fetchall()
