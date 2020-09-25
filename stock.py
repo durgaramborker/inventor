@@ -29,23 +29,19 @@ class Stock:
                         column=0
                         stock = Tk()
                         stock.title("Stock for "+tablename)
-                        for j in range(len(field_names)):
+                        for j in range(len(field_names)):                               #populate upper row with column names
                                 e = Entry(stock, width=20, fg='blue')         
                                 e.grid(row=0, column=j)
                                 e.insert(END, field_names[j])
                         i=0 
                        
-                        for bags in cursor: 
+                        for bags in cursor:                                                                 #popultate topmost row
                                 for j in range(len(bags)): 
                                          e = Entry(stock, width=20, fg='blue')         
                                          e.grid(row=i+1, column=j)
                                          e.insert(END, bags[j])
                                 i=i+1
-                                if(i==1):
-                                         for k in range(len(bags)): 
-                                                e = Entry(stock, width=20, fg='blue')         
-                                                e.grid(row=i, column=k)
-                                                e.insert(END, bags[k])
+                                
                     else:
                             print('as')
                 
