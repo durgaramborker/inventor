@@ -81,7 +81,7 @@ class insertStock:
                     messagebox.showinfo("","The item has been successfully added to the stock")
                     newStock.destroy()
                     
-                def putPrice(event):
+                def putPrice(event):                                         #this function populated price if trying to add existing stock
                      price=Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor)
                      priceText.delete(1.0,"end")
                      priceText.insert(1.0,str(price))

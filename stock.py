@@ -30,27 +30,37 @@ class Stock:
                         stock = Tk()
                         stock.title("Stock for "+tablename)
                         for j in range(len(field_names)):
-                                e = Entry(stock, width=10, fg='blue')         
+                                e = Entry(stock, width=20, fg='blue')         
                                 e.grid(row=0, column=j)
                                 e.insert(END, field_names[j])
                         i=0 
                        
                         for bags in cursor: 
                                 for j in range(len(bags)): 
-                                         e = Entry(stock, width=10, fg='blue')         
+                                         e = Entry(stock, width=20, fg='blue')         
                                          e.grid(row=i+1, column=j)
                                          e.insert(END, bags[j])
                                 i=i+1
                                 if(i==1):
                                          for k in range(len(bags)): 
-                                                e = Entry(stock, width=10, fg='blue')         
+                                                e = Entry(stock, width=20, fg='blue')         
                                                 e.grid(row=i, column=k)
                                                 e.insert(END, bags[k])
                     else:
                             print('as')
                 
                 def callbackFunc(event):
-                    clicked(numberChosen.get())                                              
+                    clicked(numberChosen.get())    
+                def populateTables(tables):
+                    relaventTables=[]
+                    j=0
+                    for i in range(len(tables)):
+                        if(tables[i][0]!='newstock' and tables[i][0]!='saleout' ):
+                            relaventTables.append(tables[i][0])
+                            j+=1
+
+                    numberChosen['values'] = relaventTables
+
                 sqlConnector=connector()                                #get the connector to the db
                 connection=sqlConnector.getConnector() 
                 cursor = connection.cursor()
@@ -62,7 +72,8 @@ class Stock:
                 cursor.execute("SHOW TABLES")
                 tables = cursor.fetchall()
                 #cursor.execute("SELECT name FROM connection WHERE type='table';")
-                numberChosen['values'] = tables
+                populateTables(tables)
+              
                 numberChosen.grid(column = 0, row = 1)  
                 #showReport = Button(stock, text = "show stock",width=10,command=clicked)
                 #showReport.grid(column = 1, row = 1)
