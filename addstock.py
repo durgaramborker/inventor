@@ -32,9 +32,7 @@ class insertStock:
                 def addNewStock():
                     nameBox.forget()
                     nameLabel.grid(row=1,column=1)
-                    priceText.grid(row=3,column=1)
                    
-                    priceLabel.grid(row=3,column=0)
                 def getcurrentQty():
                     quantity=Fetch.getQuantity(str(categoty.get()),str(nameBox.get()),cursor)   
                     return quantity[0]   
@@ -55,6 +53,7 @@ class insertStock:
                         connection.commit()
                     else:
                         quantity=0
+                        
                         quantity=getcurrentQty()
                         quantity+=int(qtyText.get("1.0",'end-1c'))
                         querry="UPDATE "+str(categoty.get())+" SET  `qty` ="+str(quantity)+" WHERE `"+str(categoty.get())+"`.`Name`= '"+str(nameBox.get())+"'"
@@ -64,28 +63,39 @@ class insertStock:
                     connection=sqlConnector.getConnector() 
                     cursor = connection.cursor()
                     formatted_date = Fetch.getFormattedDate()
+                    price=0
                     if(str(nameLabel.get("1.0",'end-1c'))==''):
                         name=str(nameBox.get())
+                        price=Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor)
                     else:
                         name=str(nameLabel.get("1.0",'end-1c'))
+                        price=priceText.get("1.0",'end-1c')
                     attrList={}
                     attrList[0]=str(categoty.get())
                     attrList[1]=name
-                    attrList[2]=str(qtyText.get("1.0",'end-1c'))
-                    attrList[3]=formatted_date
+                    attrList[2]=str(price)
+                    attrList[3]=str(qtyText.get("1.0",'end-1c'))
+                    attrList[4]=formatted_date
                     DbUtils.insertIntoDB('newstock',attrList,cursor)
                     connection.commit()
                     messagebox.showinfo("","The item has been successfully added to the stock")
                     newStock.destroy()
                     
-                
+                def putPrice(event):
+                     price=Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor)
+                     priceText.delete(1.0,"end")
+                     priceText.insert(1.0,str(price))
+
+
+
+
                 newStock = Tk()                                              #this function is called to display availale product categories
                 newStock.geometry('350x350')    
                 newStock.title("Stock Entry")
                 cat=tkinter.StringVar()
                 subcat=tkinter.StringVar()
                 categoty = ttk.Combobox(newStock, width = 12, textvariable = cat)# Adding Values 
-                nameBox=ttk.Combobox(newStock, width = 12, textvariable = subcat)
+                nameBox=ttk.Combobox(newStock, width = 12, textvariable = subcat )
                 qtyText=tkinter.Text(newStock,width=11,height=1)
                 priceText=tkinter.Text(newStock,width=11,height=1)
                 addStockButton= Button(newStock, text = "add",width=10,command=addStock)
@@ -93,8 +103,8 @@ class insertStock:
                 addNewStockButton= Button(newStock, text = "add new item",width=10,command=addNewStock)
                 addStockButton.grid(row=5,column=1)
                 addNewStockButton.grid(row=1,column=2)
-                priceLabel=tkinter.Label(newStock, width=10,text="price")
-                qtyText.grid(row=2,column=1)
+                priceText.grid(row=2,column=1)
+                qtyText.grid(row=3,column=1)
                 categoty.grid(column = 1, row =0)
                 nameBox.grid(column = 1, row =1)
                 sqlConnector=connector()                                #get the connector to the db
@@ -111,8 +121,10 @@ class insertStock:
                         tables2.append(tables[i][0])              
                 categoty['values'] = tables2  
                 categoty.bind("<<ComboboxSelected>>",loadNames)
+                nameBox.bind("<<ComboboxSelected>>",putPrice)
                 field_names = Fetch.getFields('newstock')
                 for j in range(len(field_names)-1):
+                   
                    label=tkinter.Label(newStock, width=10,text=field_names[j])
                    label.grid(row=j,column=0)
                 newStock.mainloop()
