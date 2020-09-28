@@ -2,6 +2,7 @@ import os
 import math
 import MySQLdb
 import tkinter
+import sqlite3
 import pymysql
 import mysql.connector
 import ttkthemes
@@ -39,6 +40,7 @@ class app:
                 def showReport():
                     reportW=report()
                     reportW.report()
+                    
                 insertButton = Button(window, text = "Add Stock", width=10,command=addStock) 
                 insertButton.place(relx = 0.4, rely = 0.1, anchor = CENTER)
                 updateButton = Button(window, text = "Update",width=10)
