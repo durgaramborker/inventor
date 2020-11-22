@@ -54,7 +54,7 @@ class report:
                         cursor.execute(querry)
                         field_names =Fetch.getFields("saleout")
                         column=0
-                        stock = Tk()
+                        stock = Tk() 
                         stock.title("Stock for ")
                         for j in range(len(field_names)):                               #populate upper row with column names
                                 e = Entry(stock, width=20, fg='blue')         
