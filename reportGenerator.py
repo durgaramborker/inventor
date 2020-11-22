@@ -33,6 +33,8 @@ class report:
 
 
         def showReport():
+            mainCategory=''
+            subCategory=''
             mainCategory=str(categoty.get())
             subCategory=str(nameBox.get())
             fromDate=fromPick.get_date()
@@ -48,9 +50,10 @@ class report:
 
                     if(str(mainCategory)!=''):                                                     
                         querry= "SELECT * FROM saleout where category = '"
-                        querry=querry+ str(mainCategory)
-                        querry=querry+"' and Name = '"
-                        querry=querry+ str(subCategory)+"'"      
+                        querry=querry+ str(mainCategory)+"'"
+                        if(subCategory!=''):
+                            querry=querry+" and Name = '"
+                            querry=querry+ str(subCategory)+"'"      
                         cursor.execute(querry)
                         field_names =Fetch.getFields("saleout")
                         column=0
