@@ -24,6 +24,65 @@ class report:
         pass
 
     def report(self):
+        def selectcat(event):                                                   
+            cursor.execute("USE archa")                             #this function is called to display products under a category
+            querry=" select Name from "+str(categoty.get())
+            cursor.execute(querry)
+            subTables = cursor.fetchall()
+            nameBox['values']=subTables
+
+
+        def showReport():
+            mainCategory=str(categoty.get())
+            subCategory=str(nameBox.get())
+            fromDate=fromPick.get_date()
+            toDate=toPick.get_date()
+            show(mainCategory,subCategory,fromDate,toDate)
+           
+             
+
+
+        def show(mainCategory,subCategory,fromDate,toDate):
+                                                                                        #this function displays the availble stock of a product
+                       
+
+                    if(str(mainCategory)!=''):                                                     
+                        querry= "SELECT * FROM saleout where category = '"
+                        querry=querry+ str(mainCategory)
+                        querry=querry+"' and Name = '"
+                        querry=querry+ str(subCategory)+"'"      
+                        cursor.execute(querry)
+                        field_names =Fetch.getFields("saleout")
+                        column=0
+                        stock = Tk()
+                        stock.title("Stock for ")
+                        for j in range(len(field_names)):                               #populate upper row with column names
+                                e = Entry(stock, width=20, fg='blue')         
+                                e.grid(row=0, column=j)
+                                e.insert(END, field_names[j])
+                        i=0 
+                       
+                        for bags in cursor:                                                                 #popultate topmost row
+                                for j in range(len(bags)): 
+                                         e = Entry(stock, width=20, fg='blue')         
+                                         e.grid(row=i+1, column=j)
+                                         e.insert(END, bags[j])
+                                i=i+1
+                                
+                    else:
+                            print('as')
+
+
+
+
+
+
+
+
+
+        sqlConnector=connector()                                #get the connector to the db
+        connection=sqlConnector.getConnector() 
+        cursor = connection.cursor()
         repotWindow = Tk()                                              #this function is called to dgenerate report on products and categories
         repotWindow.geometry('350x350')    
         repotWindow.title("Stock Entry")
@@ -33,11 +92,17 @@ class report:
         nameBox=ttk.Combobox(repotWindow, width = 12, textvariable = subcat )
         catogaryLabel=tkinter.Label(repotWindow, width=10,text="category")
         nameLabel=tkinter.Label(repotWindow, width=10,text="item")
-        showReport= Button(repotWindow, text = "show report",width=10)
+        showReport= Button(repotWindow, text = "show report",width=10 ,command=showReport)
         fromDateLabel=tkinter.Label(repotWindow, width=10,text="From")
         toDateLabel=tkinter.Label(repotWindow, width=10,text="To")
         fromPick = DateEntry(repotWindow, width=12,date_pattern='y/mm/dd', background='darkblue',foreground='white', borderwidth=2)
         toPick = DateEntry(repotWindow, width=12,date_pattern='y/mm/dd', background='darkblue',foreground='white', borderwidth=2)
+        cursor.execute("USE archa")
+        cursor.execute("SHOW TABLES")
+        tables = cursor.fetchall()
+        #cursor.execute("SELECT name FROM connection WHERE type='table';")
+        categoty['values'] = tables
+        categoty.bind("<<ComboboxSelected>>", selectcat)                
         toPick.grid(column = 1, row =2)
         showReport.grid(column=2,row=4)
         catogaryLabel.grid(column=0,row=0)
