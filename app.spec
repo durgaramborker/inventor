@@ -4,10 +4,10 @@ block_cipher = None
 
 
 a = Analysis(['app.py'],
-             pathex=['C:\\Users\\CHETAN\\Documents\\code'],
+             pathex=['C:\\Users\\CHETAN\\Documents\\inventor'],
              binaries=[],
              datas=[],
-             hiddenimports=[],
+             hiddenimports=['babel.numbers'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
