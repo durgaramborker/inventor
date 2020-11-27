@@ -53,7 +53,14 @@ class report:
                         querry=querry+ str(mainCategory)+"'"
                         if(subCategory!=''):
                             querry=querry+" and Name = '"
-                            querry=querry+ str(subCategory)+"'"      
+                            querry=querry+ str(subCategory)+"'" 
+                       
+                            querry=querry+" and date between  '"
+                            querry=querry+str(fromPick.get_date())+"'"
+                            querry=querry+" and '"
+                            querry=querry+str(toPick.get_date())+"'"
+
+
                         cursor.execute(querry)
                         field_names =Fetch.getFields("saleout")
                         column=0
