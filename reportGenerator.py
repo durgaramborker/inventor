@@ -7,6 +7,14 @@ import mysql.connector
 import CommonUtils
 import DBUtils
 import tkcalendar
+import PyPDF2
+import reportlab
+from reportlab.platypus import SimpleDocTemplate 
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Table
+from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfFileWriter as w
+from pathlib import Path
 from DBUtils import DbUtils
 from CommonUtils import Fetch
 from tkinter import *
@@ -24,6 +32,7 @@ class report:
         pass
 
     def report(self):
+        
         def selectcat(event):                                                   
             cursor.execute("USE archa")                             #this function is called to display products under a category
             querry=" select Name from "+str(categoty.get())
@@ -40,8 +49,18 @@ class report:
             fromDate=fromPick.get_date()
             toDate=toPick.get_date()
             show(mainCategory,subCategory,fromDate,toDate)
+            
            
-             
+        def createPdf(data):
+            
+            fileName="report.pdf"
+            pdf= SimpleDocTemplate(
+               fileName ,pagesize=letter
+            )
+            table =Table(data)
+            elems=[]
+            elems.append(table)
+            pdf.build(elems)
 
 
         def show(mainCategory,subCategory,fromDate,toDate):
@@ -64,20 +83,26 @@ class report:
                         cursor.execute(querry)
                         field_names =Fetch.getFields("saleout")
                         column=0
+                        data=[]
+                        list1=[]
+                        list2=[]
                         stock = Tk() 
                         stock.title("Stock for ")
                         for j in range(len(field_names)):                               #populate upper row with column names
-                                e = Entry(stock, width=20, fg='blue')         
-                                e.grid(row=0, column=j)
-                                e.insert(END, field_names[j])
-                        i=0 
+                               list1.append(field_names[j])
                        
+                        data.append(list1)
                         for bags in cursor:                                                                 #popultate topmost row
                                 for j in range(len(bags)): 
-                                         e = Entry(stock, width=20, fg='blue')         
-                                         e.grid(row=i+1, column=j)
-                                         e.insert(END, bags[j])
-                                i=i+1
+                                    list2.append(str(bags[j]))
+                                    
+                               
+                               
+                                listv=list2.copy()
+                                data.append(listv)
+                                list2.clear()
+                               
+                        createPdf(data)
                                 
                     else:
                             print('as')
@@ -87,6 +112,13 @@ class report:
 
 
 
+        
+        #pdf_path ="D:/"
+
+# 1
+        #pdf_reader = PdfFileReader(str(pdf_path))
+        
+      
 
 
 
@@ -112,7 +144,8 @@ class report:
         tables = cursor.fetchall()
         #cursor.execute("SELECT name FROM connection WHERE type='table';")
         categoty['values'] = tables
-        categoty.bind("<<ComboboxSelected>>", selectcat)                
+        categoty.bind("<<ComboboxSelected>>", selectcat) 
+                   
         toPick.grid(column = 1, row =2)
         showReport.grid(column=2,row=4)
         catogaryLabel.grid(column=0,row=0)
@@ -123,6 +156,7 @@ class report:
         nameBox.grid(column = 1, row =1)
         fromPick.grid(column = 1, row =2)
         toPick.grid(column = 1, row =3)
+       
         repotWindow.mainloop()
 
 
