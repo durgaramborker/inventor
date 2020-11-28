@@ -27,6 +27,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
 from tkcalendar import DateEntry
+from ttkthemes import themed_tk as tk
 
 
 class report:
@@ -138,20 +139,22 @@ class report:
         sqlConnector=connector()                                #get the connector to the db
         connection=sqlConnector.getConnector() 
         cursor = connection.cursor()
-        repotWindow = Tk()                                              #this function is called to dgenerate report on products and categories
+        repotWindow =  tk.ThemedTk()
+        repotWindow.get_themes()
+        repotWindow.set_theme("scidgreen")                                             #this function is called to dgenerate report on products and categories
         repotWindow.geometry('350x350')    
         repotWindow.title("Stock Entry")
         cat=tkinter.StringVar()
         subcat=tkinter.StringVar()
         categoty = ttk.Combobox(repotWindow, width = 12, textvariable = cat)# Adding Values 
         nameBox=ttk.Combobox(repotWindow, width = 12, textvariable = subcat )
-        catogaryLabel=tkinter.Label(repotWindow, width=10,text="category")
-        nameLabel=tkinter.Label(repotWindow, width=10,text="item")
-        showReport= Button(repotWindow, text = "show report",width=10 ,command=showReport)
-        fromDateLabel=tkinter.Label(repotWindow, width=10,text="From")
-        toDateLabel=tkinter.Label(repotWindow, width=10,text="To")
-        fromPick = DateEntry(repotWindow, width=12,date_pattern='y/mm/dd', background='darkblue',foreground='white', borderwidth=2)
-        toPick = DateEntry(repotWindow, width=12,date_pattern='y/mm/dd', background='darkblue',foreground='white', borderwidth=2)
+        catogaryLabel=Label(repotWindow, width=10,text="category")
+        nameLabel=Label(repotWindow, width=10,text="item")
+        showReport= ttk.Button(repotWindow, text = "show report",width=10 ,command=showReport)
+        fromDateLabel=Label(repotWindow, width=10,text="From")
+        toDateLabel=Label(repotWindow, width=10,text="To")
+        fromPick = DateEntry(repotWindow, width=12,date_pattern='y/mm/dd', background='green',foreground='white', borderwidth=2)
+        toPick = DateEntry(repotWindow, width=12,date_pattern='y/mm/dd', background='green',foreground='white', borderwidth=2)
         cursor.execute("USE archa")
         cursor.execute("SHOW TABLES")
         tables = cursor.fetchall()

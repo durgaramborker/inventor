@@ -12,6 +12,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
+from ttkthemes import themed_tk as tk
 
 
 class insertStock:
@@ -89,7 +90,9 @@ class insertStock:
 
 
 
-                newStock = Tk()                                              #this function is called to display availale product categories
+                newStock =  tk.ThemedTk()
+                newStock.get_themes()
+                newStock.set_theme("scidgreen")     
                 newStock.geometry('350x350')    
                 newStock.title("Stock Entry")
                 cat=tkinter.StringVar()
@@ -98,13 +101,13 @@ class insertStock:
                 nameBox=ttk.Combobox(newStock, width = 12, textvariable = subcat )
                 qtyText=tkinter.Text(newStock,width=11,height=1)
                 priceText=tkinter.Text(newStock,width=11,height=1)
-                addStockButton= Button(newStock, text = "add",width=10,command=addStock)
+                addStockButton= ttk.Button(newStock, text = "add",width=13,command=addStock)
                 nameLabel=tkinter.Text(newStock,width=11,height=1)
-                addNewStockButton= Button(newStock, text = "add new item",width=10,command=addNewStock)
+                addNewStockButton= ttk.Button(newStock, text = "add new item",width=13,command=addNewStock)
                 addStockButton.grid(row=5,column=1)
                 addNewStockButton.grid(row=1,column=2)
-                priceText.grid(row=2,column=1)
-                qtyText.grid(row=3,column=1)
+                qtyText.grid(row=2,column=1)
+                priceText.grid(row=3,column=1)
                 categoty.grid(column = 1, row =0)
                 nameBox.grid(column = 1, row =1)
                 sqlConnector=connector()                                #get the connector to the db

@@ -19,13 +19,15 @@ from reportGenerator import report
 from sales import Sale
 from stock import Stock
 from addstock import insertStock
+from ttkthemes import themed_tk as tk
 
 class app:
         def __init__(self):                                     #the outer app
-                window = Tk()
+                window = tk.ThemedTk()
+
                 window.title("Inventory management system")
-                style = ThemedStyle(window)
-                style.set_theme("black")
+                window.get_themes()
+                window.set_theme("scidgreen")
                 
                 def displayStockFrame():
                     getstock=Stock()
@@ -41,15 +43,15 @@ class app:
                     reportW=report()
                     reportW.report()
                     
-                insertButton = Button(window, text = "Add Stock", width=10,command=addStock) 
+                insertButton = ttk.Button(window, text = "Add Stock", width=18,command=addStock) 
                 insertButton.place(relx = 0.4, rely = 0.1, anchor = CENTER)
-                updateButton = Button(window, text = "Update",width=10)
+                updateButton = ttk.Button(window, text = "Update",width=18)
                 updateButton.place(relx = 0.4, rely = 0.2, anchor = CENTER)
-                displayStockButton = Button(window, text = "Display Stock",width=10,command=displayStockFrame)
+                displayStockButton = ttk.Button(window, text = "Display Stock",width=18,command=displayStockFrame)
                 displayStockButton.place(relx = 0.4, rely = 0.3, anchor = CENTER) 
-                generateReport = Button(window, text = "Generate Report",width=12,command=showReport)
+                generateReport = ttk.Button(window, text = "Generate Report",width=18,command=showReport)
                 generateReport.place(relx = 0.4, rely = 0.4, anchor = CENTER) 
-                makeSales = Button(window, text = "make sale",width=10,command=makeSale)
+                makeSales = ttk.Button(window, text = "make sale",width=18,command=makeSale)
                 makeSales.place(relx = 0.4, rely = 0.5, anchor = CENTER) 
                 window.geometry('350x350')
                 window.mainloop()

@@ -12,6 +12,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
+from ttkthemes import themed_tk as tk
 
 
 class Sale:
@@ -71,7 +72,7 @@ class Sale:
                                         List=[]
                                         for i in range(3):
                                                 
-                                                ea = Entry(saleFrame, width=10, fg='blue')                                 
+                                                ea = ttk.Entry(saleFrame, width=10)                                 
                                                 ea.grid(row=items+7,column=i)                                              
                                                 ea.insert(END, str(table.get()))if i==0 else ea.insert(END, str(subTable.get())) if i==1 else ea.insert(END, str(qtyTable.get()))
                                                 List.append(ea)
@@ -144,7 +145,9 @@ class Sale:
                         sqlConnector=connector()                                #get the connector to the db
                         connection=sqlConnector.getConnector() 
                         cursor = connection.cursor()
-                        saleFrame = Tk()
+                        saleFrame =  tk.ThemedTk()
+                        saleFrame.set_theme("scidgreen")     
+                        saleFrame.geometry('350x350') 
                         saleFrame.geometry('350x350')
                         saleFrame.title("Make Sale")
                         number=tkinter.StringVar()

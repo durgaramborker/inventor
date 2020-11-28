@@ -10,6 +10,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
+from ttkthemes import themed_tk as tk
 
 class Stock:
 
@@ -27,17 +28,17 @@ class Stock:
                         cursor.execute(querry)
                         field_names =Fetch.getFields( str(tablename))
                         column=0
-                        stock = Tk()
+                        stock = tk.ThemedTk()
                         stock.title("Stock for "+tablename)
                         for j in range(len(field_names)):                               #populate upper row with column names
-                                e = Entry(stock, width=20, fg='blue')         
+                                e = ttk.Entry(stock, width=20)         
                                 e.grid(row=0, column=j)
                                 e.insert(END, field_names[j])
                         i=0 
                        
                         for bags in cursor:                                                                 #popultate topmost row
                                 for j in range(len(bags)): 
-                                         e = Entry(stock, width=20, fg='blue')         
+                                         e = ttk.Entry(stock, width=20)         
                                          e.grid(row=i+1, column=j)
                                          e.insert(END, bags[j])
                                 i=i+1
@@ -60,7 +61,9 @@ class Stock:
                 sqlConnector=connector()                                #get the connector to the db
                 connection=sqlConnector.getConnector() 
                 cursor = connection.cursor()
-                stock = Tk()                                              #this function is called to display availale product categories
+                stock = tk.ThemedTk()  
+                stock.get_themes()
+                stock.set_theme("scidgreen")                                           #this function is called to display availale product categories
                 stock.geometry('350x350')       
                 number=tkinter.StringVar()
                 numberChosen = ttk.Combobox(stock, width = 12, textvariable = number)# Adding Values 
