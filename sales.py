@@ -91,7 +91,7 @@ class Sale:
                                         cursor.execute("USE archa")
                                         attDict=dict()
                                         conditionDict=dict()
-                                        attDict={'qty':str(quantity[0]-int(qtyTable.get()))}
+                                        attDict={'qty':str(int(quantity[0])-int(qtyTable.get()))}
                                         conditionDict={'Name':str(subTable.get())}
                                         DbUtils.updateDB(str(table.get()),attDict,conditionDict,cursor)
                                         for i in range(int(quantity[0]-int(qtyTable.get()))):

@@ -123,21 +123,17 @@ class report:
                         if(subCategory!=''):
                             querry=querry+" and Name = '"
                             querry=querry+ str(subCategory)+"'" 
-                       
                         querry=querry+" and date between  '"
-                        querry=querry+str(fromPick.get_date())+"'"
-                        querry=querry+" and '"
-                        querry=querry+str(toPick.get_date())+"'"
-                        cursor.execute(querry)
-                        DrawReportIntoPdf()          
+                        
+                                
                     else:
                             querry= "SELECT * FROM saleout"
                             querry=querry+" where date between  '"
-                            querry=querry+str(fromPick.get_date())+"'"
-                            querry=querry+" and '"
-                            querry=querry+str(toPick.get_date())+"'"
-                            cursor.execute(querry)
-                            DrawReportIntoPdf()  
+                    querry=querry+str(fromPick.get_date())+"'"
+                    querry=querry+" and '"
+                    querry=querry+str(toPick.get_date())+"'"
+                    cursor.execute(querry)
+                    DrawReportIntoPdf()  
 
         sqlConnector=connector()                                #get the connector to the db
         connection=sqlConnector.getConnector() 

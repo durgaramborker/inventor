@@ -10,7 +10,7 @@ class connector:
             connection=mysql.connector.connect(
             host="localhost",
             user="root", 
-            passwd="",
+            passwd="root",
             database="archa"
             )
            
