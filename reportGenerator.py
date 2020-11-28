@@ -47,7 +47,7 @@ class report:
             nameBox['values']=subTables
 
 
-        def showReport():
+        def showReport():                                   #this function starts the report genertion
             mainCategory=''
             subCategory=''
             mainCategory=str(categoty.get())
@@ -57,7 +57,7 @@ class report:
             show(mainCategory,subCategory,fromDate,toDate)
             
            
-        def createPdf(data):
+        def createPdf(data):                    #this function ccepts the data formatted, and draws and saves it into pdf
             
             fileName="report"+" for "+str(categoty.get())+" - "+str(nameBox.get())+".pdf"
           
@@ -92,12 +92,31 @@ class report:
             
             #messagebox.showinfo("info","report has been successfully generated")
             #subprocess.Popen([file],shell=True)
-           
+        def DrawReportIntoPdf():                                        #this function formats the DB date into table, passes the same to pdfwriter            
+            field_names =Fetch.getFields("saleout")
+            column=0
+            data=[]
+            list1=[]
+            list2=[]
+            totalQty=0
+            totalPrice=0
+            for j in range(len(field_names)):                               #populate upper row with column names
+                list1.append(field_names[j])       
+            data.append(list1)
+            for bags in cursor:                                                                 #popultate topmost row
+                for j in range(len(bags)): 
+                    list2.append(str(bags[j]))
+                    if (j==2):
+                        totalQty+=int(bags[j])
+                    if (j==3):
+                        totalPrice+=int(bags[j])
+                data.append(list2.copy())
+                list2.clear()
+            data.append(['Total Price and Qty sold','',str(totalQty),str(totalPrice),''])      
+            createPdf(data)
 
-        def show(mainCategory,subCategory,fromDate,toDate):
-                                                                                        #this function displays the availble stock of a product
-                       
-
+        def show(mainCategory,subCategory,fromDate,toDate):             #this function fetches details about the selected criterias from the DB
+                                                                                    
                     if(str(mainCategory)!=''):                                                     
                         querry= "SELECT * FROM saleout where category = '"
                         querry=querry+ str(mainCategory)+"'"
@@ -105,38 +124,20 @@ class report:
                             querry=querry+" and Name = '"
                             querry=querry+ str(subCategory)+"'" 
                        
-                            querry=querry+" and date between  '"
+                        querry=querry+" and date between  '"
+                        querry=querry+str(fromPick.get_date())+"'"
+                        querry=querry+" and '"
+                        querry=querry+str(toPick.get_date())+"'"
+                        cursor.execute(querry)
+                        DrawReportIntoPdf()          
+                    else:
+                            querry= "SELECT * FROM saleout"
+                            querry=querry+" where date between  '"
                             querry=querry+str(fromPick.get_date())+"'"
                             querry=querry+" and '"
                             querry=querry+str(toPick.get_date())+"'"
-
-
-                        cursor.execute(querry)
-                        field_names =Fetch.getFields("saleout")
-                        column=0
-                        data=[]
-                        list1=[]
-                        list2=[]
-                        totalQty=0
-                        totalPrice=0
-                        for j in range(len(field_names)):                               #populate upper row with column names
-                               list1.append(field_names[j])
-                       
-                        data.append(list1)
-                        for bags in cursor:                                                                 #popultate topmost row
-                                for j in range(len(bags)): 
-                                    list2.append(str(bags[j]))
-                                    if (j==2):
-                                        totalQty+=int(bags[j])
-                                    if (j==3):
-                                        totalPrice+=int(bags[j])
-                                data.append(list2.copy())
-                                list2.clear()
-                        data.append(['Total Price and Qty sold','',str(totalQty),str(totalPrice),''])      
-                        createPdf(data)
-                                
-                    else:
-                            print('as')
+                            cursor.execute(querry)
+                            DrawReportIntoPdf()  
 
         sqlConnector=connector()                                #get the connector to the db
         connection=sqlConnector.getConnector() 
