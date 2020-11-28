@@ -9,9 +9,14 @@ import DBUtils
 import tkcalendar
 import PyPDF2
 import reportlab
+import os
 from reportlab.platypus import SimpleDocTemplate 
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Table
+from reportlab.platypus import Table,TableStyle
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+from reportlab.lib import colors
+from reportlab.pdfgen import canvas 
 from PyPDF2 import PdfFileReader
 from PyPDF2 import PdfFileWriter as w
 from pathlib import Path
@@ -22,6 +27,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
 from tkcalendar import DateEntry
+
 
 class report:
 
@@ -53,15 +59,40 @@ class report:
            
         def createPdf(data):
             
-            fileName="report.pdf"
+            fileName="report"+" for "+str(categoty.get())+" - "+str(nameBox.get())+".pdf"
+          
             pdf= SimpleDocTemplate(
-               fileName ,pagesize=letter
+               fileName ,pagesize=letter,showBoundary=1
             )
             table =Table(data)
             elems=[]
             elems.append(table)
+            style = TableStyle([
+            ('BACKGROUND', (0,0), (4,0), colors.green),
+            ('TEXTCOLOR',(0,0),(-1,0),colors.whitesmoke),
+            ('ALIGN',(0,0),(-1,-1),'CENTER'),
+            ('FONTNAME', (0,0), (-1,0), 'Courier-Bold'),
+            ('FONTSIZE', (0,0), (-1,0), 14),
+            ('BOTTOMPADDING', (0,0), (-1,0), 12),
+            ('BACKGROUND',(0,1),(-1,-1),colors.beige),])
+            table.setStyle(style)
+            ts = TableStyle([('BOX',(0,0),(-1,-1),2,colors.black),
+            ('LINEBEFORE',(2,1),(2,-1),2,colors.red),
+            ('LINEABOVE',(0,2),(-1,2),2,colors.green),
+            ('GRID',(0,1),(-1,-1),2,colors.black),])
+            table.setStyle(ts)
             pdf.build(elems)
+            os.startfile(fileName)
+           # pdf = canvas.Canvas(fileName)
+            #pdfmetrics.registerFont(TTFont('abc', 'timesbd.ttf'))
+            #pdf.setFont('abc', 36)
+            #pdf.drawCentredString(300, 770, "report"+" for "+str(categoty.get())+" - "+str(nameBox.get()))
+            #pdf.save()
 
+            
+            #messagebox.showinfo("info","report has been successfully generated")
+            #subprocess.Popen([file],shell=True)
+           
 
         def show(mainCategory,subCategory,fromDate,toDate):
                                                                                         #this function displays the availble stock of a product
@@ -86,8 +117,8 @@ class report:
                         data=[]
                         list1=[]
                         list2=[]
-                        stock = Tk() 
-                        stock.title("Stock for ")
+                        totalQty=0
+                        totalPrice=0
                         for j in range(len(field_names)):                               #populate upper row with column names
                                list1.append(field_names[j])
                        
@@ -95,32 +126,17 @@ class report:
                         for bags in cursor:                                                                 #popultate topmost row
                                 for j in range(len(bags)): 
                                     list2.append(str(bags[j]))
-                                    
-                               
-                               
-                                listv=list2.copy()
-                                data.append(listv)
+                                    if (j==2):
+                                        totalQty+=int(bags[j])
+                                    if (j==3):
+                                        totalPrice+=int(bags[j])
+                                data.append(list2.copy())
                                 list2.clear()
-                               
+                        data.append(['Total Price and Qty sold','',str(totalQty),str(totalPrice),''])      
                         createPdf(data)
                                 
                     else:
                             print('as')
-
-
-
-
-
-
-        
-        #pdf_path ="D:/"
-
-# 1
-        #pdf_reader = PdfFileReader(str(pdf_path))
-        
-      
-
-
 
         sqlConnector=connector()                                #get the connector to the db
         connection=sqlConnector.getConnector() 
@@ -144,8 +160,7 @@ class report:
         tables = cursor.fetchall()
         #cursor.execute("SELECT name FROM connection WHERE type='table';")
         categoty['values'] = tables
-        categoty.bind("<<ComboboxSelected>>", selectcat) 
-                   
+        categoty.bind("<<ComboboxSelected>>", selectcat)    
         toPick.grid(column = 1, row =2)
         showReport.grid(column=2,row=4)
         catogaryLabel.grid(column=0,row=0)
@@ -156,7 +171,6 @@ class report:
         nameBox.grid(column = 1, row =1)
         fromPick.grid(column = 1, row =2)
         toPick.grid(column = 1, row =3)
-       
         repotWindow.mainloop()
 
 
