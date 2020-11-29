@@ -7,7 +7,6 @@ import mysql.connector
 import CommonUtils
 import DBUtils
 import tkcalendar
-import PyPDF2
 import reportlab
 import os
 from reportlab.platypus import SimpleDocTemplate 
@@ -17,8 +16,6 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.lib import colors
 from reportlab.pdfgen import canvas 
-from PyPDF2 import PdfFileReader
-from PyPDF2 import PdfFileWriter as w
 from pathlib import Path
 from DBUtils import DbUtils
 from CommonUtils import Fetch
