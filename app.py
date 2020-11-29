@@ -9,6 +9,7 @@ import ttkthemes
 from ttkthemes import ThemedStyle
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import CENTER
 from dbconnection import connector
 import sales
 import stock

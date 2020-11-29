@@ -9,6 +9,8 @@ import DBUtils
 from DBUtils import DbUtils
 from CommonUtils import Fetch
 from tkinter import ttk
+from tkinter import Label
+from tkinter import Button
 from tkinter import messagebox
 from dbconnection import connector
 from ttkthemes import themed_tk as tk

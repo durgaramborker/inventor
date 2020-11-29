@@ -9,6 +9,8 @@ import DBUtils
 import tkcalendar
 import reportlab
 import os
+from tkinter import Label
+from tkinter import Button
 from reportlab.platypus import SimpleDocTemplate 
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Table,TableStyle
