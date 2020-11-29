@@ -4,7 +4,6 @@ import MySQLdb
 import tkinter
 import pymysql
 import mysql.connector
-from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector

@@ -6,7 +6,6 @@ import pymysql
 import mysql.connector
 import CommonUtils
 from CommonUtils import Fetch
-from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
@@ -15,7 +14,7 @@ from ttkthemes import themed_tk as tk
 class Stock:
 
             def __init__(self):
-                pass
+                pass    #just init
             
             def  Stock(self):
                 def clicked(tablename):
@@ -30,14 +29,14 @@ class Stock:
                         column=0
                         stock = tk.ThemedTk()
                         stock.title("Stock for "+tablename)
-                        for j in range(len(field_names)):                               #populate upper row with column names
+                        for j in range(len(field_names)-1):                               #populate upper row with column names
                                 e = ttk.Entry(stock, width=20)         
                                 e.grid(row=0, column=j)
                                 e.insert(END, field_names[j])
                         i=0 
                        
                         for bags in cursor:                                                                 #popultate topmost row
-                                for j in range(len(bags)): 
+                                for j in range(len(bags)-1): 
                                          e = ttk.Entry(stock, width=20)         
                                          e.grid(row=i+1, column=j)
                                          e.insert(END, bags[j])

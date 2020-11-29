@@ -8,7 +8,6 @@ import CommonUtils
 import DBUtils
 from DBUtils import DbUtils
 from CommonUtils import Fetch
-from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector

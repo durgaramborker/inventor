@@ -7,7 +7,6 @@ import pymysql
 import mysql.connector
 import ttkthemes
 from ttkthemes import ThemedStyle
-from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector

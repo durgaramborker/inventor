@@ -8,7 +8,6 @@ import CommonUtils
 import DBUtils
 from DBUtils import DbUtils
 from CommonUtils import Fetch
-from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
@@ -18,7 +17,7 @@ from ttkthemes import themed_tk as tk
 class Sale:
 
             def __init__(self):
-               pass
+               pass #just init
 
             def Sales(self):
                         categoryList=[]

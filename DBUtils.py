@@ -6,16 +6,13 @@ import pymysql
 import mysql.connector
 import CommonUtils
 from CommonUtils import Fetch
-from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
 from dbconnection import connector
 
 
 class DbUtils:                                                                                          #this class contains common DB methods, that can be used dynamically
 
-                def __init__():
-                    pass
+                def __init__(self):
+                    pass #just init
 
                 def insertIntoDB(tableName,attList,cursor):                     #This function inserts into DB dynamically. takes table attributes names from @param tableName
                     field_names = Fetch.getFields(tableName)                    #Takes cell values from attList.attList mst contain values in the same order as column names in the DB

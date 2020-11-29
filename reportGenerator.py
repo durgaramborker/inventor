@@ -22,7 +22,6 @@ from PyPDF2 import PdfFileWriter as w
 from pathlib import Path
 from DBUtils import DbUtils
 from CommonUtils import Fetch
-from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from dbconnection import connector
@@ -36,7 +35,7 @@ class report:
 
 
     def __init__(self):
-        pass
+        pass                #just inistialization
 
     def report(self):
         
@@ -71,7 +70,7 @@ class report:
             show(mainCategory,subCategory,fromDate,toDate,"newstock")
             DrawReportIntoPdf("newstock",False)
             createPdf(False)
-        def createPdf(bool):                    #this function ccepts the data formatted, and draws and saves it into pdf
+        def createPdf(bool):                    #this function accepts the data formatted, and draws and saves it into pdf
             if(bool):
                 fileName="report"+" for "+str(categoty.get())+" - "+str(nameBox.get())+".pdf"
             else:
