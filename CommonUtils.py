@@ -18,9 +18,9 @@ class Fetch:
                 pass
 
 
-            def getPrice(tableName,subTableName,cursor):
+            def getPrice(tableName,subTableName,cursor,priceName):
                 cursor.execute("USE archa")                                       
-                querry="select Price from "+str(tableName)+" where Name = '"+str(subTableName)+"'"
+                querry="select "+priceName+" from "+str(tableName)+" where Name = '"+str(subTableName)+"'"
                 cursor.execute(querry)
                 priceTable = cursor.fetchall()
                 price=int(priceTable[0][0])

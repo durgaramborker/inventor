@@ -48,8 +48,10 @@ class insertStock:
                         
                         attrList={}
                         attrList[0]=str(nameLabel.get("1.0",'end-1c'))
-                        attrList[1]=str(priceText.get("1.0",'end-1c'))
-                        attrList[2]=str(qtyText.get("1.0",'end-1c'))
+                        attrList[2]=str(priceText.get("1.0",'end-1c'))
+                        attrList[1]=str(qtyText.get("1.0",'end-1c'))
+                        attrList[3]=str(costprice.get("1.0",'end-1c'))
+
                         DbUtils.insertIntoDB(str(categoty.get()),attrList,cursor)
                         connection.commit()
                     else:
@@ -64,28 +66,30 @@ class insertStock:
                     connection=sqlConnector.getConnector() 
                     cursor = connection.cursor()
                     formatted_date = Fetch.getFormattedDate()
-                    price=0
                     if(str(nameLabel.get("1.0",'end-1c'))==''):
                         name=str(nameBox.get())
-                        price=Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor)
                     else:
                         name=str(nameLabel.get("1.0",'end-1c'))
-                        price=priceText.get("1.0",'end-1c')
                     attrList={}
                     attrList[0]=str(categoty.get())
                     attrList[1]=name
-                    attrList[2]=str(price)
-                    attrList[3]=str(qtyText.get("1.0",'end-1c'))
-                    attrList[4]=formatted_date
+                    attrList[2]=str(qtyText.get("1.0",'end-1c'))
+                    attrList[3]=str(costprice.get("1.0",'end-1c'))
+                    attrList[4]=str(priceText.get("1.0",'end-1c'))
+                    attrList[5]=formatted_date
+                    attrList[6]=int(qtyText.get("1.0",'end-1c'))*int(costprice.get("1.0",'end-1c'))
                     DbUtils.insertIntoDB('newstock',attrList,cursor)
                     connection.commit()
                     messagebox.showinfo("","The item has been successfully added to the stock")
                     newStock.destroy()
                     
                 def putPrice(event):                                         #this function populated price if trying to add existing stock
-                     price=Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor)
+                     price=Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor,"salesprice")
                      priceText.delete(1.0,"end")
                      priceText.insert(1.0,str(price))
+                     price=Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor,"costprice")
+                     costprice.delete(1.0,"end")
+                     costprice.insert(1.0,str(price))
 
 
 
@@ -103,11 +107,13 @@ class insertStock:
                 priceText=tkinter.Text(newStock,width=11,height=1)
                 addStockButton= ttk.Button(newStock, text = "add",width=13,command=addStock)
                 nameLabel=tkinter.Text(newStock,width=11,height=1)
+                costprice=tkinter.Text(newStock,width=11,height=1)
                 addNewStockButton= ttk.Button(newStock, text = "add new item",width=13,command=addNewStock)
-                addStockButton.grid(row=5,column=1)
+                addStockButton.grid(row=6,column=1)
                 addNewStockButton.grid(row=1,column=2)
                 qtyText.grid(row=2,column=1)
-                priceText.grid(row=3,column=1)
+                priceText.grid(row=4,column=1)
+                costprice.grid(row=3,column=1)
                 categoty.grid(column = 1, row =0)
                 nameBox.grid(column = 1, row =1)
                 sqlConnector=connector()                                #get the connector to the db

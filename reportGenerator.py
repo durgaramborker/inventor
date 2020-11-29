@@ -55,13 +55,28 @@ class report:
             subCategory=str(nameBox.get())
             fromDate=fromPick.get_date()
             toDate=toPick.get_date()
-            show(mainCategory,subCategory,fromDate,toDate)
-            
-           
-        def createPdf(data):                    #this function ccepts the data formatted, and draws and saves it into pdf
-            
-            fileName="report"+" for "+str(categoty.get())+" - "+str(nameBox.get())+".pdf"
-          
+            show(mainCategory,subCategory,fromDate,toDate,"saleout")
+            DrawReportIntoPdf("saleout",True)
+            createPdf(True)
+
+        def showNetReport():
+            mainCategory=''
+            subCategory=''
+            mainCategory=str(categoty.get())
+            subCategory=str(nameBox.get())
+            fromDate=fromPick.get_date()
+            toDate=toPick.get_date()
+            show(mainCategory,subCategory,fromDate,toDate,"saleout")
+            DrawReportIntoPdf("saleout",False)
+            show(mainCategory,subCategory,fromDate,toDate,"newstock")
+            DrawReportIntoPdf("newstock",False)
+            createPdf(False)
+        def createPdf(bool):                    #this function ccepts the data formatted, and draws and saves it into pdf
+            if(bool):
+                fileName="report"+" for "+str(categoty.get())+" - "+str(nameBox.get())+".pdf"
+            else:
+                fileName=" net report"+" for "+str(categoty.get())+" - "+str(nameBox.get())+".pdf"
+
             pdf= SimpleDocTemplate(
                fileName ,pagesize=letter,showBoundary=1
             )
@@ -83,6 +98,7 @@ class report:
             ('GRID',(0,1),(-1,-1),2,colors.black),])
             table.setStyle(ts)
             pdf.build(elems)
+            data.clear()
             os.startfile(fileName)
            # pdf = canvas.Canvas(fileName)
             #pdfmetrics.registerFont(TTFont('abc', 'timesbd.ttf'))
@@ -93,17 +109,19 @@ class report:
             
             #messagebox.showinfo("info","report has been successfully generated")
             #subprocess.Popen([file],shell=True)
-        def DrawReportIntoPdf():                                        #this function formats the DB date into table, passes the same to pdfwriter            
-            field_names =Fetch.getFields("saleout")
+        def DrawReportIntoPdf(tableString,bool):                                        #this function formats the DB date into table, passes the same to pdfwriter            
+            field_names =Fetch.getFields(tableString)
             column=0
-            data=[]
+            
             list1=[]
             list2=[]
             totalQty=0
             totalPrice=0
-            for j in range(len(field_names)):                               #populate upper row with column names
-                list1.append(field_names[j])       
-            data.append(list1)
+            priceIn=0
+            if(int(len(data))==0):
+                for j in range(len(field_names)):                               #populate upper row with column names
+                    list1.append(field_names[j])
+                data.append(list1)
             for bags in cursor:                                                                 #popultate topmost row
                 for j in range(len(bags)): 
                     list2.append(str(bags[j]))
@@ -111,15 +129,26 @@ class report:
                         totalQty+=int(bags[j])
                     if (j==3):
                         totalPrice+=int(bags[j])
-                data.append(list2.copy())
+                    if (j==6 and tableString=="newstock"):
+                        priceIn+=int(bags[j])
+                if(bool):
+                    data.append(list2.copy())
                 list2.clear()
-            data.append(['Total Price and Qty sold','',str(totalQty),str(totalPrice),''])      
-            createPdf(data)
+            if(tableString=="saleout"):
+                data.append(['Total Price and Qty sold','',str(totalQty),str(totalPrice),''])
+            if(tableString=="newstock"):
+                qtyOut=int(data[1][2])
+                priceOut=int(data[1][3])
+                #Fetch.getPrice(str(categoty.get()),str(nameBox.get()),cursor,"costprice")
+                data.append(['Total Price and Qty bought','',str(totalQty),str(priceIn),''])
+                data.append(['net profit/loss','','',"Rs."+str((priceOut-priceIn)),''])
 
-        def show(mainCategory,subCategory,fromDate,toDate):             #this function fetches details about the selected criterias from the DB
+            
+
+        def show(mainCategory,subCategory,fromDate,toDate,tableString):             #this function fetches details about the selected criterias from the DB
                                                                                     
                     if(str(mainCategory)!=''):                                                     
-                        querry= "SELECT * FROM saleout where category = '"
+                        querry= "SELECT * FROM "+tableString+ " where category = '"
                         querry=querry+ str(mainCategory)+"'"
                         if(subCategory!=''):
                             querry=querry+" and Name = '"
@@ -128,13 +157,15 @@ class report:
                         
                                 
                     else:
-                            querry= "SELECT * FROM saleout"
+                            querry= "SELECT * FROM "+tableString
                             querry=querry+" where date between  '"
                     querry=querry+str(fromPick.get_date())+"'"
                     querry=querry+" and '"
                     querry=querry+str(toPick.get_date())+"'"
                     cursor.execute(querry)
-                    DrawReportIntoPdf()  
+                    
+                   
+        
 
         sqlConnector=connector()                                #get the connector to the db
         connection=sqlConnector.getConnector() 
@@ -150,7 +181,8 @@ class report:
         nameBox=ttk.Combobox(repotWindow, width = 12, textvariable = subcat )
         catogaryLabel=Label(repotWindow, width=10,text="category")
         nameLabel=Label(repotWindow, width=10,text="item")
-        showReport= ttk.Button(repotWindow, text = "show report",width=10 ,command=showReport)
+        showReport= ttk.Button(repotWindow, text = "show report",width=15 ,command=showReport)
+        showNetReport= ttk.Button(repotWindow, text = "show net report",width=15 ,command=showNetReport)
         fromDateLabel=Label(repotWindow, width=10,text="From")
         toDateLabel=Label(repotWindow, width=10,text="To")
         fromPick = DateEntry(repotWindow, width=12,date_pattern='y/mm/dd', background='green',foreground='white', borderwidth=2)
@@ -160,9 +192,11 @@ class report:
         tables = cursor.fetchall()
         #cursor.execute("SELECT name FROM connection WHERE type='table';")
         categoty['values'] = tables
+        data=[]
         categoty.bind("<<ComboboxSelected>>", selectcat)    
         toPick.grid(column = 1, row =2)
         showReport.grid(column=2,row=4)
+        showNetReport.grid(column=2,row=5)
         catogaryLabel.grid(column=0,row=0)
         fromDateLabel.grid(column=0,row=2)
         toDateLabel.grid(column=0,row=3)

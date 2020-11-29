@@ -61,7 +61,7 @@ class Sale:
                                                                 #this function is the main function that adds sale to the totalsale, updates price, updates qty
                                 if(isAvailable()):
                                         
-                                        price=Fetch.getPrice(str(table.get()), str(subTable.get()),cursor)
+                                        price=Fetch.getPrice(str(table.get()), str(subTable.get()),cursor,"salesprice")
                                         individualprice=int(price)
                                         prevprice=int(w.cget("text"))
                                         items=int(totalItems .cget("text"))
@@ -99,7 +99,7 @@ class Sale:
                                                 qtyArray.append(i+1)
                                                 i+=1
                                         qtyTable['values']=qtyArray                 # populates the qty box with available qty
-                                        saleOut(Fetch.getPrice(str(table.get()),str(subTable.get()),cursor))
+                                        saleOut(Fetch.getPrice(str(table.get()),str(subTable.get()),cursor,"salesprice"))
                                                 
                                                                  
                                         return True
@@ -117,7 +117,7 @@ class Sale:
                                 table=ea[0].get()
                                 subtable=ea[1].get()
                                 quantityValue=ea[2].get()      
-                                price=Fetch.getPrice(str(table), str(subtable),cursor)
+                                price=Fetch.getPrice(str(table), str(subtable),cursor,"salesprice")
                                 categoryList.append(table)
                                 nameList.append(subtable)
                                 cursor.execute("USE archa")
