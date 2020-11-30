@@ -98,30 +98,24 @@ class report:
             pdf.build(elems)
             data.clear()
             os.startfile(fileName)
-           # pdf = canvas.Canvas(fileName)
-            #pdfmetrics.registerFont(TTFont('abc', 'timesbd.ttf'))
-            #pdf.setFont('abc', 36)
-            #pdf.drawCentredString(300, 770, "report"+" for "+str(categoty.get())+" - "+str(nameBox.get()))
-            #pdf.save()
+            
 
             
             #messagebox.showinfo("info","report has been successfully generated")
             #subprocess.Popen([file],shell=True)
         def DrawReportIntoPdf(tableString,bool):                                        #this function formats the DB date into table, passes the same to pdfwriter            
             field_names =Fetch.getFields(tableString)
-            column=0
-            
             list1=[]
             list2=[]
             totalQty=0
             totalPrice=0
             priceIn=0
             if(int(len(data))==0):
-                for j in range(len(field_names)):                               #populate upper row with column names
+                for j in range(len(field_names)):                               #append columns names to data list,only if  data list is not empty
                     list1.append(field_names[j])
                 data.append(list1)
-            for bags in cursor:                                                                 #popultate topmost row
-                for j in range(len(bags)): 
+            for bags in cursor:                                                                 #ciculate through data, ading qty and price for the final values, and appending the rows
+                for j in range(len(bags)):                                                      #individually to the data if its not a net report    
                     list2.append(str(bags[j]))
                     if (j==2):
                         totalQty+=int(bags[j])
