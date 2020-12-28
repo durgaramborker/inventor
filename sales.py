@@ -150,7 +150,7 @@ class Sale:
                         saleFrame =  tk.ThemedTk()
                         saleFrame.set_theme("scidgreen")     
                         saleFrame.geometry('350x350') 
-                        saleFrame.geometry('350x350')
+                        saleFrame.geometry('400x350')
                         saleFrame.title("Make Sale")
                         number=tkinter.StringVar()
                         number2=tkinter.StringVar()
